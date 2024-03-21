@@ -10,9 +10,20 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    Color mainColor = Colors.red.shade600;
+    Color mainColor = Colors.red.shade800;
     return Scaffold(
-      appBar: AppBar(backgroundColor: mainColor),
+      appBar: AppBar(
+        backgroundColor: mainColor,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.color_lens,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
