@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,7 +37,11 @@ class _HomePageState extends State<HomePage> {
                 const Center(
                   child: Text(
                     'الهدف',
-                    style: TextStyle(fontSize: 28, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 28,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 Row(
@@ -54,6 +59,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(
                         fontSize: 24,
                         color: Colors.white,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     IconButton(
@@ -179,13 +185,17 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 10,
               ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
+              CircularPercentIndicator(
+                radius: 80,
+                lineWidth: 6.0,
+                percent: 0.8,
+                center: new Icon(
                   Icons.touch_app,
+                  size: 50.0,
                   color: mainColor,
-                  size: 70,
                 ),
+                backgroundColor: Colors.grey,
+                progressColor: mainColor,
               ),
               Text(
                 'مرات التكرار : 0',
