@@ -10,7 +10,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  //to use shared prefrence
+  //reset function
+  resetAll({bool resetTarget = false}) {
+    setCount(counter = 0);
+    setTime(time = 0);
+    resetTarget == true ? setTarget(target = 0) : null;
+  }
+
+//to use shared prefrence
   //set counter
   setCount(int value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -35,14 +42,25 @@ class _HomePageState extends State<HomePage> {
     getValues();
   }
 
+  //set color
+  setColor(int value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setInt('color', value);
+    getValues();
+  }
+
 //get counter
   getValues() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      counter = prefs.getInt('counter') ?? 0;
-      time = prefs.getInt('time') ?? 0;
-      target = prefs.getInt('target') ?? 0;
-    });
+    setState(
+      () {
+        counter = prefs.getInt('counter') ?? 0;
+        time = prefs.getInt('time') ?? 0;
+        target = prefs.getInt('target') ?? 0;
+        appColor = prefs.getInt('color') ?? 0xffC62828;
+      },
+    );
   }
 
   @override
@@ -58,6 +76,7 @@ class _HomePageState extends State<HomePage> {
   int counter = 0;
   int time = 0;
   int target = 0;
+  bool isActive = true;
   @override
   Widget build(BuildContext context) {
     Color mainColor = Color(appColor);
@@ -67,9 +86,7 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: mainColor,
           onPressed: () {
-            setState(() {
-              counter = 0;
-            });
+            resetAll(resetTarget: true);
           },
           child: const Icon(
             Icons.refresh,
@@ -81,9 +98,13 @@ class _HomePageState extends State<HomePage> {
           elevation: 0,
           actions: [
             IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.color_lens,
+              onPressed: () {
+                setState(() {
+                  isActive = !isActive;
+                });
+              },
+              icon: Icon(
+                isActive ? Icons.color_lens : Icons.color_lens_outlined,
                 color: Colors.white,
               ),
             ),
@@ -112,6 +133,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       IconButton(
                         onPressed: () {
+                          resetAll();
                           setTarget(target + 1);
                         },
                         icon: const Icon(
@@ -132,6 +154,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       IconButton(
                         onPressed: () {
+                          resetAll();
                           setTarget(target - 1);
                         },
                         icon: const Icon(
@@ -230,7 +253,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          setTarget(target = 0);
+                          resetAll();
                         },
                         child: Container(
                           padding: const EdgeInsets.all(12),
@@ -283,18 +306,19 @@ class _HomePageState extends State<HomePage> {
                 CircularPercentIndicator(
                   radius: 80,
                   lineWidth: 6.0,
-                  percent: counter / 33,
+                  percent: target > 0 ? counter / target : 0,
                   center: IconButton(
                     iconSize: 50.0,
                     color: mainColor,
                     onPressed: () {
                       setState(
                         () {
-                          if (counter == 33) {
+                          if (counter >= target) {
                             setTime(time + 1);
-                            setCount(counter = 0);
+                            setCount(target > 0 ? counter = 1 : 0);
+                          } else {
+                            setCount(counter + 1);
                           }
-                          setCount(counter + 1);
                         },
                       );
                     },
@@ -304,7 +328,7 @@ class _HomePageState extends State<HomePage> {
                   progressColor: mainColor,
                 ),
                 Text(
-                  'مرات التكرار : $time',
+                  'مرات التكرار : ${counter > 0 ? time : '0'}',
                   style: TextStyle(
                     fontSize: 20,
                     color: mainColor,
@@ -330,62 +354,65 @@ class _HomePageState extends State<HomePage> {
             const Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Radio(
+              child: Visibility(
+                visible: isActive,
+                child: Row(
+                  children: [
+                    Radio(
+                        fillColor: MaterialStateColor.resolveWith(
+                          (states) => const Color(0xffC62828),
+                        ),
+                        value: 0xffC62828,
+                        groupValue: appColor,
+                        onChanged: (val) {
+                          setState(() {
+                            setColor(val!);
+                          });
+                        }),
+                    Radio(
                       fillColor: MaterialStateColor.resolveWith(
-                        (states) => const Color(0xffC62828),
+                        (states) => const Color(0xff1565C0),
                       ),
-                      value: 0xffC62828,
+                      value: 0xff1565C0,
                       groupValue: appColor,
                       onChanged: (val) {
-                        setState(() {
-                          appColor = val!;
-                        });
-                      }),
-                  Radio(
-                    fillColor: MaterialStateColor.resolveWith(
-                      (states) => const Color(0xff1565C0),
+                        setState(
+                          () {
+                            setColor(val!);
+                          },
+                        );
+                      },
                     ),
-                    value: 0xff1565C0,
-                    groupValue: appColor,
-                    onChanged: (val) {
-                      setState(
-                        () {
-                          appColor = val!;
-                        },
-                      );
-                    },
-                  ),
-                  Radio(
-                    fillColor: MaterialStateColor.resolveWith(
-                      (states) => const Color(0xff2E7D32),
+                    Radio(
+                      fillColor: MaterialStateColor.resolveWith(
+                        (states) => const Color(0xff2E7D32),
+                      ),
+                      value: 0xff2E7D32,
+                      groupValue: appColor,
+                      onChanged: (val) {
+                        setState(
+                          () {
+                            setColor(val!);
+                          },
+                        );
+                      },
                     ),
-                    value: 0xff2E7D32,
-                    groupValue: appColor,
-                    onChanged: (val) {
-                      setState(
-                        () {
-                          appColor = val!;
-                        },
-                      );
-                    },
-                  ),
-                  Radio(
-                    fillColor: MaterialStateColor.resolveWith(
-                      (states) => const Color(0xffF9A825),
+                    Radio(
+                      fillColor: MaterialStateColor.resolveWith(
+                        (states) => const Color(0xffF9A825),
+                      ),
+                      value: 0xffF9A825,
+                      groupValue: appColor,
+                      onChanged: (val) {
+                        setState(
+                          () {
+                            setColor(val!);
+                          },
+                        );
+                      },
                     ),
-                    value: 0xffF9A825,
-                    groupValue: appColor,
-                    onChanged: (val) {
-                      setState(
-                        () {
-                          appColor = val!;
-                        },
-                      );
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
             )
           ],
