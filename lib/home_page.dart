@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,12 +10,54 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //to use shared prefrence
+  //set counter
+  setCount(int value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setInt('counter', value);
+    getValues();
+  }
+
+  //set time
+  setTime(int value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setInt('time', value);
+    getValues();
+  }
+
+  //set target
+  setTarget(int value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setInt('target', value);
+    getValues();
+  }
+
+//get counter
+  getValues() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      counter = prefs.getInt('counter') ?? 0;
+      time = prefs.getInt('time') ?? 0;
+      target = prefs.getInt('target') ?? 0;
+    });
+  }
+
+  @override
+  void initState() {
+    getValues();
+    super.initState();
+  }
+
   int radio = 0;
 
   int appColor = 0xffC62828;
   TextDirection textDecoration = TextDirection.rtl;
   int counter = 0;
   int time = 0;
+  int target = 0;
   @override
   Widget build(BuildContext context) {
     Color mainColor = Color(appColor);
@@ -68,22 +111,29 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          setTarget(target + 1);
+                        },
                         icon: const Icon(
                           Icons.add_circle,
                           color: Colors.white,
                         ),
                       ),
-                      const Text(
-                        '33',
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          '$target',
+                          style: const TextStyle(
+                            fontSize: 24,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          setTarget(target - 1);
+                        },
                         icon: const Icon(
                           Icons.remove_circle,
                           color: Colors.white,
@@ -94,80 +144,105 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Text(
-                          '1000+',
-                          style: TextStyle(
-                            fontSize: 16,
+                      GestureDetector(
+                        onTap: () {
+                          setTarget(target + 1000);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Text(
+                            '1000+',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(
                         width: 8,
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Text(
-                          '100+',
-                          style: TextStyle(
-                            fontSize: 16,
+                      GestureDetector(
+                        onTap: () {
+                          setTarget(target + 100);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Text(
+                            '100+',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(
                         width: 8,
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Text(
-                          '100',
-                          style: TextStyle(
-                            fontSize: 16,
+                      GestureDetector(
+                        onTap: () {
+                          setTarget(target = 100);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Text(
+                            '100',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(
                         width: 8,
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Text(
-                          '33',
-                          style: TextStyle(
-                            fontSize: 16,
+                      GestureDetector(
+                        onTap: () {
+                          setTarget(target = 33);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Text(
+                            '33',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(
                         width: 8,
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Text(
-                          '0',
-                          style: TextStyle(
-                            fontSize: 16,
+                      GestureDetector(
+                        onTap: () {
+                          setTarget(target = 0);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Text(
+                            '0',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
@@ -213,13 +288,15 @@ class _HomePageState extends State<HomePage> {
                     iconSize: 50.0,
                     color: mainColor,
                     onPressed: () {
-                      setState(() {
-                        if (counter == 33) {
-                          time++;
-                          counter = 0;
-                        }
-                        counter++;
-                      });
+                      setState(
+                        () {
+                          if (counter == 33) {
+                            setTime(time + 1);
+                            setCount(counter = 0);
+                          }
+                          setCount(counter + 1);
+                        },
+                      );
                     },
                     icon: const Icon(Icons.touch_app),
                   ),
@@ -238,7 +315,7 @@ class _HomePageState extends State<HomePage> {
                   height: 10,
                 ),
                 Text(
-                  'المجموع : 0',
+                  'المجموع : ${time * target + counter}',
                   style: TextStyle(
                     fontSize: 20,
                     color: mainColor,
